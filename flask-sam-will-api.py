@@ -29,6 +29,17 @@ def select_a_column():
     #small change
     return jsonify({column_name: mta_data[column_name].tolist()})  # Convert Series to list
 
+@app.route("/records", methods=['GET'])
+def offset_limit():
+    mta_data = pd.read_csv("MTA_data.csv")
+    limit = request.args.get('limit', default=5, type=int) # Default limit is 5
+    offset = request.args.get('offset', default=0, type=int) # Default offset is 0
+
+    paginated_data = mta_data.iloc[offset:offset + limit]  # Use iloc for row slicing
+
+    return jsonify(paginated_data.to_dict(orient="records"))
+
+
 
 
 if __name__ == "__main__":
