@@ -27,7 +27,7 @@ def select_a_column():
     if column_name not in mta_data:
         return jsonify({"error": f"Column '{column_name}' not found"}), 400
     #small change
-    return jsonify({column_name: mta_data[column_name]})  # Convert Series to list
+    return jsonify({column_name: mta_data[column_name].tolist()})  # Convert Series to list
 
 
 
