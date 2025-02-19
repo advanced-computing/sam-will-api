@@ -1,5 +1,6 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Response
 import pandas as pd 
+import io
 
 app = Flask(__name__)
 
@@ -39,7 +40,18 @@ def offset_limit():
 
     return jsonify(paginated_data.to_dict(orient="records"))
 
+def format_response(data, filename="output"):
+    """Helper function to return data in JSON or CSV format."""
+    output_format = request.args.get("format", "json").lower()
 
+    if output_format == "csv":
+        csv_buffer = io.StringIO()
+        data.to_csv(csv_buffer, index=False)
+        response = Response(csv_buffer.getvalue(), content_type="text/csv")
+        response.headers["Content-Disposition"] = f"attachment; filename={filename}.csv"
+        return response
+
+    return jsonify(data.to_dict(orient="records"))  # Default to JSON
 
 
 if __name__ == "__main__":
