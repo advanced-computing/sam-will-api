@@ -39,7 +39,7 @@ def offset_limit():
     paginated_data = mta_data.iloc[offset:offset + limit]  # Use iloc for row slicing
 
     return jsonify(paginated_data.to_dict(orient="records"))
-
+#from chat
 def format_response(data, filename="output"):
     """Helper function to return data in JSON or CSV format."""
     output_format = request.args.get("format", "json").lower()
