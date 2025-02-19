@@ -1,5 +1,6 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Response
 import pandas as pd 
+import io
 
 app = Flask(__name__)
 
@@ -53,8 +54,22 @@ def retrieve_date():
     if record.empty:
         return jsonify({"error": f"No data found for date {record_date}"}), 404
 
-    return jsonify(record.to_dict(orient='records'))
 
+@app.route("/get_data", methods=["GET"])
+def get_data():
+
+    data = pd.read_csv("MTA_data.csv")
+    output_format = request.args.get("format", "json").lower()
+
+    if output_format == "csv":
+        csv_buffer = io.StringIO()
+        data.to_csv(csv_buffer, index=False)
+        response = Response(csv_buffer.getvalue(), content_type="text/plain")
+        return response
+    
+    if output_format == "json":
+        return jsonify(data.to_dict(orient="records"))
+    
 
 if __name__ == "__main__":
     app.run(debug=True)
