@@ -39,20 +39,23 @@ def offset_limit():
     paginated_data = mta_data.iloc[offset:offset + limit]  # Use iloc for row slicing
 
     return jsonify(paginated_data.to_dict(orient="records"))
-#from chat
-def format_response(data, filename="output"):
-    """Helper function to return data in JSON or CSV format."""
+
+
+@app.route("/get_data", methods=["GET"])
+def get_data():
+
+    data = pd.read_csv("MTA_data.csv")
     output_format = request.args.get("format", "json").lower()
 
     if output_format == "csv":
         csv_buffer = io.StringIO()
         data.to_csv(csv_buffer, index=False)
-        response = Response(csv_buffer.getvalue(), content_type="text/csv")
-        response.headers["Content-Disposition"] = f"attachment; filename={filename}.csv"
+        response = Response(csv_buffer.getvalue(), content_type="text/plain")
         return response
-
-    return jsonify(data.to_dict(orient="records"))  # Default to JSON
-
+    
+    if output_format == "json":
+        return jsonify(data.to_dict(orient="records"))
+    
 
 if __name__ == "__main__":
     app.run(debug=True)
