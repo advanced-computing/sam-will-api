@@ -54,6 +54,8 @@ def retrieve_date():
     if record.empty:
         return jsonify({"error": f"No data found for date {record_date}"}), 404
 
+    return jsonify(record.to_dict(orient='records'))
+
 
 @app.route("/get_data", methods=["GET"])
 def get_data():
