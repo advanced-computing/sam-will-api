@@ -1,5 +1,5 @@
-#sam-will-api 
-##API Documentation
+# sam-will-api 
+## API Documentation
 
 ## Connecting to the API
 Run the API by running '''flask —app flask-sam-will-api.py run''' or '''python flask-sam-will-api.py''' in the terminal or by going to the endpoint url here: '''http://127.0.0.1:5000'''
