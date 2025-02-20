@@ -1,5 +1,5 @@
-# sam-will-api
+#sam-will-api 
+##API Documentation
 
-## Here's how to use this thing --- 
-
-Actually, I have no clue...
+## Connecting to the API
+Run the API by running '''flask —app flask-sam-will-api.py run''' in the terminal or by going to 
