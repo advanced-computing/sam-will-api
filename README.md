@@ -27,7 +27,7 @@ The following routes can be used to access the data.
 - Path: Add '''/Date?id=(desired date)'''
 - The date should be formatted as mm/dd/yyyy 
 - Allows for selecting a single part of the data
-- Example: 
+- Example: '''/Date?id=03/01/2020'''
 
 ## Get Data
 - Method: GET
