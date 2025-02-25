@@ -60,15 +60,17 @@ def retrieve_date():
 
     if record_date is None:
         return jsonify({"error": "Please provide a date via the 'id' parameter"}), 400
-
-    # Assuming there's an 'ID' column in your CSV
-    record = mta_data[mta_data['Date'] == record_date]
-
-    if record.empty:
-        return jsonify({"error": f"No data found for date {record_date}"}), 404
+    else:
+        record = select_date(mta_data,record_date)
 
     return jsonify(record.to_dict(orient='records'))
 
+def select_date(df,date):
+
+    if date not in df["Date"].values:
+        print(f"'{date}' is not in the data")
+    else:
+        return df[df["Date"]==date]
 
 @app.route("/get_data", methods=["GET"])
 def get_data():
