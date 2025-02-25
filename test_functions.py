@@ -28,7 +28,7 @@ def test_limit_offset():
 
     assert output.equals(pandas_data_out)
 
-def test_column_name():
+def test_column_filter():
      
     data = {
         'name': ['Alice', 'Bob', 'Charlie', 'David', 'Emma'],
@@ -46,3 +46,28 @@ def test_column_name():
     column_output = column_output.reset_index(drop=True)
 
     assert column_output.equals(df_output)
+
+
+
+def test_select_date():
+    data = {
+        'name': ['Alice', 'Bob', 'Charlie', 'David', 'Emma'],
+        'age': [25, 30, 35, 40, 45],
+        'Date': ['02/25/25','01/12/25','04/30/95','09/07/98','02/24/00']
+        }
+
+    df = pd.DataFrame(data)
+
+    output = {
+        'name': ['Charlie'],
+        'age': [35],
+        'Date': ['04/30/95']
+    }
+
+    df_output = pd.DataFrame(output)
+
+    data_row = my_api.select_date(df,'04/30/95')
+    data_row = data_row.reset_index(drop=True)
+
+
+    assert data_row.equals(df_output)
