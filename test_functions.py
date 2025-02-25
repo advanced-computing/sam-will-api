@@ -28,3 +28,21 @@ def test_limit_offset():
 
     assert output.equals(pandas_data_out)
 
+def test_column_name():
+     
+    data = {
+        'name': ['Alice', 'Bob', 'Charlie', 'David', 'Emma'],
+        'age': [25, 30, 35, 40, 45]
+    }
+
+    df = pd.DataFrame(data)   
+
+    output =  {
+        'name': ['Alice', 'Bob', 'Charlie', 'David', 'Emma']
+    }
+    df_output = pd.DataFrame(output)  
+
+    column_output = my_api.column_filter(df, 'name')
+    column_output = column_output.reset_index(drop=True)
+
+    assert column_output.equals(df_output)
