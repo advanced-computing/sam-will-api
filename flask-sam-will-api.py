@@ -25,20 +25,33 @@ def select_a_column():
     if not column_name:
         return jsonify({"error": "Please provide a column name via 'field' parameter"}), 400
     
-    if column_name not in mta_data:
-        return jsonify({"error": f"Column '{column_name}' not found"}), 400
-    #small change
-    return jsonify({column_name: mta_data[column_name].tolist()})  # Convert Series to list
+    else:
+        mta_data_filtered = column_filter(mta_data, column_name)
+
+    return jsonify({column_name: mta_data_filtered.tolist()})
+
+def column_filter(df, column_name):
+    if column_name not in df.columns:
+        print(f"'{column_name}' is not in the dataframe")
+    else:
+        return pd.DataFrame(df[column_name])
+    
 
 @app.route("/records", methods=['GET'])
 def offset_limit():
     mta_data = pd.read_csv("MTA_data.csv")
+
     limit = request.args.get('limit', default=5, type=int) # Default limit is 5
     offset = request.args.get('offset', default=0, type=int) # Default offset is 0
 
-    paginated_data = mta_data.iloc[offset:offset + limit]  # Use iloc for row slicing
+    output = limit_offset(mta_data, limit, offset)
+    return jsonify(output.to_dict(orient="records"))
 
-    return jsonify(paginated_data.to_dict(orient="records"))
+def limit_offset(df, limit, offset):
+
+    paginated_data = df.iloc[offset:offset + limit]  # Use iloc for row slicing
+
+    return paginated_data
 
 @app.route("/Date", methods=['GET'])
 def retrieve_date():
