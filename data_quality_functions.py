@@ -7,4 +7,8 @@ def remove_blanks(df, columns):
 def unique_values(df,column_name):
     return df[column_name].is_unique
 
+#function to check if there are any neagtive values in a column when there should not be
+def negative_values(df, column_name):
+    return df[df[column_name] < 0]
+
 

@@ -1,5 +1,5 @@
 import pandas as pd
-from data_quality_functions import remove_blanks, unique_values
+from data_quality_functions import remove_blanks, unique_values, negative_values
 
 
 def test_blanks():
@@ -34,4 +34,22 @@ def test_unique():
     unique = unique_values(df,'name')
 
     assert unique == expected_output
+
+def test_negative_values():
+    data = {
+        'name': ['Bob', 'Mary', 'Charlie', 'David', 'Emma'],
+        'age': [25, -30, 35, 40, 45]}
+
+    df = pd.DataFrame(data)
+
+    expected_output = {
+        'name': ['Mary'],
+        'age': [-30]}
+
+    expected_output = pd.DataFrame(expected_output)
+
+    output = negative_values(df, 'age')
+    output = output.reset_index(drop=True)
+
+    assert output.equals(expected_output)
 
