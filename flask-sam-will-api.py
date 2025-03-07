@@ -103,7 +103,8 @@ def get_data():
 
 @app.route("/users", methods=["POST"])
 def add_users():
-    data = request.get("username", "age", "country")
+    #data = request.get("username", "age", "country")
+    data = request.get_json()
 
     username = data["username"]
     age = data["age"]
