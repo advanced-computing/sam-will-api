@@ -112,9 +112,22 @@ def add_users():
 
 
     con = duckdb.connect('mta_data.db')
-    con.sql("CREATE TABLE users(username TEXT, age INT, country TEXT)")
+    con.sql("CREATE TABLE IF NOT EXISTS users(username TEXT, age INT, country TEXT)")
     
     con.sql(f"INSERT INTO user VALUES ('{username})','{age}','{country}')")
+
+
+@app.route("/users", methods=["GET"])
+def show_user():
+    con = duckdb.connect('mta_data.db')
+    #con.table('users').show()
+    #from ChatGPT https://chatgpt.com/c/67cf35b5-a2ec-8009-a359-3ee708735f7e
+    df = con.execute("SELECT * FROM users").fetchdf()
+    
+    # Convert DataFrame to JSON
+    users_json = df.to_dict(orient="records")  # Convert rows to list of dictionaries
+    
+    return jsonify(users_json)  # Return JSON response
 
 
 if __name__ == "__main__":
