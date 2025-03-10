@@ -114,7 +114,9 @@ def add_users():
     con = duckdb.connect('mta_data.db')
     con.sql("CREATE TABLE IF NOT EXISTS users(username TEXT, age INT, country TEXT)")
     
-    con.sql(f"INSERT INTO user VALUES ('{username})','{age}','{country}')")
+    con.sql(f"INSERT INTO user VALUES ('{username}','{age}','{country}')")
+    con.commit()
+
 
 
 @app.route("/users", methods=["GET"])
