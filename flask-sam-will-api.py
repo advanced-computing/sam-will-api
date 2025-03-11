@@ -100,22 +100,43 @@ def get_data():
     
 
 
-
-@app.route("/users", methods=["POST"])
+@app.route("/visitors", methods=["GET"])
 def add_users():
-    #data = request.get("username", "age", "country")
-    data = request.get_json()
+    try:
+        # Get data from URL query parameters
+        username = request.args.get("username")
+        age = request.args.get("age")
+        country = request.args.get("country")
 
-    username = data["username"]
-    age = data["age"]
-    country = data["country"]
+        # Validate input
+        if not username or not age or not country:
+            return jsonify({"error": "Missing data"}), 400
 
+        # Convert age to integer (to avoid SQL errors)
+        try:
+            age = int(age)
+        except ValueError:
+            return jsonify({"error": "Invalid age format"}), 400
 
-    con = duckdb.connect('mta_data.db')
-    con.sql("CREATE TABLE IF NOT EXISTS users(username TEXT, age INT, country TEXT)")
-    
-    con.sql(f"INSERT INTO user VALUES ('{username}','{age}','{country}')")
-    con.commit()
+        # Connect to DuckDB
+        con = duckdb.connect('mta_data.db')
+
+        # Create table if it doesn't exist
+        con.execute("CREATE TABLE IF NOT EXISTS users (username TEXT, age INT, country TEXT)")
+
+        # Use DuckDB's execute method for parameterized queries
+        con.execute("INSERT INTO users VALUES (?, ?, ?)", [username, age, country])
+
+        # Close the connection
+        con.close()
+
+        return jsonify({"message": "User added successfully!"}), 201
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+if __name__ == "__main__":
+    app.run(debug=True)
 
 
 
