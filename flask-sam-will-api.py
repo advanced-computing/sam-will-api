@@ -140,18 +140,28 @@ if __name__ == "__main__":
 
 
 
+
 @app.route("/users", methods=["GET"])
 def show_user():
     con = duckdb.connect('mta_data.db')
-    #con.table('users').show()
-    #from ChatGPT https://chatgpt.com/c/67cf35b5-a2ec-8009-a359-3ee708735f7e
-    df = con.execute("SELECT * FROM users").fetchdf()
-    
-    # Convert DataFrame to JSON
-    users_json = df.to_dict(orient="records")  # Convert rows to list of dictionaries
-    
-    return jsonify(users_json)  # Return JSON response
 
+    # Fetch data from DuckDB
+    df = con.execute("SELECT * FROM users").fetchdf()
+
+    first_country = df['country'].value_counts().idxmax()
+    second_country = df['country'].value_counts().index[1]
+    third_country = df['country'].value_counts().index[2]
+    
+    # Compute statistics
+    data_description = {
+        'Number of Users': len(df),
+        'Average Age': df['age'].mean(),
+        'Three Countries with Most Users': (f"{first_country}, {second_country}, {third_country}")
+    }
+
+    con.close()
+    return jsonify(data_description)  # Return JSON response directly
 
 if __name__ == "__main__":
     app.run(debug=True)
+
