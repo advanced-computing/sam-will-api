@@ -1,7 +1,9 @@
 -- Connect to a new or existing DuckDB database file with the following
 
-ATTACH DATABASE 'Fed_CPI.db' AS mydb;
+ATTACH DATABASE 'Fed_CPI2.db' AS mydb;
 
 -- Create table in this persistent database
 
-CREATE TABLE mydb.fed AS SELECT * FROM read_csv('Fed_CPI.csv');
+CREATE OR REPLACE TABLE mydb.cpi_append AS SELECT * FROM read_csv('PCPI24M1.csv');
+CREATE OR REPLACE TABLE mydb.cpi_trunc AS SELECT * FROM read_csv('PCPI24M1.csv');
+CREATE OR REPLACE TABLE mydb.cpi_inc AS SELECT * FROM read_csv('PCPI24M1.csv');
