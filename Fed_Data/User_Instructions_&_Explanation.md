@@ -7,4 +7,4 @@
     5. Enter "SELECT * FROM cpi_trunc;" to see the trunc table  
 
 ***Explanation***:
-    cpi_trunc will look identical to PCPI25.csv, and so will cpi_inc. However, cpi_append will look different
+    cpi_trunc, cpi_inc, and cpi_append will all look identical to PCPI25.csv because no data was dropped from PCPI24 to PCPI25, even though there was new data, and old data was revised.
